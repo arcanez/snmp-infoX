@@ -1,31 +1,30 @@
 package SNMP::InfoX;
 use Moose;
-use MooseX::Types::Moose qw(Int Str);
 use SNMP;
 
 with 'MooseX::Getopt';
 
 has 'snmp_ver' => (
     is => 'rw',
-    isa => Int,
+    isa => 'Int',
     default => 2
 );
 
 has 'snmp_comm' => (
     is => 'rw',
-    isa => Str,
+    isa => 'Str',
     default => 'public'
 );
 
 has 'snmp_user' => (
     is => 'rw',
-    isa => Str,
+    isa => 'Str',
     default => 'initial'
 );
 
 has 'hostname' => (
     is => 'rw',
-    isa => Str,
+    isa => 'Str',
     required => 1
 );
 
