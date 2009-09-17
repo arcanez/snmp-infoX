@@ -34,6 +34,12 @@ has 'session' => (
     lazy_build => 1,
 );
 
+has 'bulkwalk' => (
+    is => 'rw',
+    isa => 'Bool',
+    default => 1,
+);
+
 my %GLOBALS = (
             'id'           => 'sysObjectID',
             'description'  => 'sysDescr',
