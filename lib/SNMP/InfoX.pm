@@ -72,6 +72,19 @@ for my $attr (keys %FUNCS) {
         lazy => 1,
         default => sub { shift-> _build_func($FUNCS{$attr}) }
     );
+
+    around $attr => sub {
+        my $orig = shift;
+        my $self = shift;
+        my $iid = shift;
+        if ($iid) {
+            my %return;
+            $return{$iid} = $self->session->get($FUNCS{$attr} . '.' . $iid);
+            return \%return;
+        } else {
+            $self->$orig();
+        }
+    }
 }
 
 sub _build_global {
