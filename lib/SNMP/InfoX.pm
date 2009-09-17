@@ -52,7 +52,62 @@ my %GLOBALS = (
             'ipforwarding' => 'ipForwarding',
             );
 
-for my $attr (keys %GLOBALS) { has $attr => (is => 'ro', lazy => 1, default => sub { shift->session->get($GLOBALS{$attr} . '.0') }); }
+my %FUNCS = (
+          'i_name' => 'ifName',
+            );
+
+for my $attr (keys %GLOBALS) {
+    has $attr => (
+        is => 'ro',
+        isa => 'Str|Int',
+        lazy => 1,
+        default => sub { shift->_build_global($GLOBALS{$attr}) }
+    );
+}
+
+for my $attr (keys %FUNCS) {
+    has $attr => (
+        is => 'ro',
+        isa => 'HashRef[Str|Int]',
+        lazy => 1,
+        default => sub { shift-> _build_func($FUNCS{$attr}) }
+    );
+}
+
+sub _build_global {
+    my $self = shift;
+    my $global = shift;
+
+    $self->session->get($global . '.0');
+}
+
+sub _build_func {
+    my $self = shift;
+    my $func = shift;
+
+    my $sess = $self->session;
+    my $vars = SNMP::VarList->new([$func]);
+    my %return;
+    if ($self->bulkwalk) {
+        my @resp = $sess->bulkwalk(0, 25, $vars);
+        for my $vbarr ( @resp ) {
+            for my $v (@$vbarr) {
+                my ($name, $iid) = split /\./, $v->name;
+                $return{$iid} = $v->val;
+            }
+        }
+    } else {
+        my $val;
+        for ($val = $sess->getnext($vars);
+            $vars->[0]->tag =~ /$func/       # still in table
+            and not $sess->{ErrorStr};          # and not end of mib or other error
+            $val = $sess->getnext($vars)) {
+                my ($name, $iid) = split /\./, $vars->[0]->name;
+                $return{$iid} = $val;
+        }
+    }
+    \%return;
+}
 
 sub _build_session {
     my $self = shift;
