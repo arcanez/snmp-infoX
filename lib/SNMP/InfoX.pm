@@ -39,7 +39,7 @@ has session => (
 has bulkwalk => (
     is => 'rw',
     isa => 'Bool',
-    default => 1,
+    default => 0,
 );
 
 my %GLOBALS = (
