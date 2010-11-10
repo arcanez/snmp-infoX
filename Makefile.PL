@@ -9,7 +9,7 @@ readme_from     ('lib/SNMP/InfoX.pm');
 
 tests           't/*.t';
 
-requires        'Moose',                        '0.89_01';
+requires        'Moose',                        '0.94';
 requires        'MooseX::Getopt',               '0.21';
 
 test_requires   'Test::More',                   '0.92';
