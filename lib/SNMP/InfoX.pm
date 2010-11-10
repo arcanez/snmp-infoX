@@ -4,57 +4,57 @@ use SNMP;
 
 with 'MooseX::Getopt';
 
-has 'snmp_ver' => (
+has snmp_ver => (
     is => 'rw',
     isa => 'Int',
     default => 2
 );
 
-has 'snmp_comm' => (
+has snmp_comm => (
     is => 'rw',
     isa => 'Str',
     default => 'public'
 );
 
-has 'snmp_user' => (
+has snmp_user => (
     is => 'rw',
     isa => 'Str',
     default => 'initial'
 );
 
-has 'hostname' => (
+has hostname => (
     is => 'rw',
     isa => 'Str',
     required => 1
 );
 
-has 'session' => (
+has session => (
     is => 'rw',
     isa => 'SNMP::Session',
     lazy_build => 1,
 );
 
-has 'bulkwalk' => (
+has bulkwalk => (
     is => 'rw',
     isa => 'Bool',
     default => 1,
 );
 
 my %GLOBALS = (
-            'id'           => 'sysObjectID',
-            'description'  => 'sysDescr',
-            'uptime'       => 'sysUpTime',
-            'contact'      => 'sysContact',
-            'name'         => 'sysName',
-            'location'     => 'sysLocation',
-            'layers'       => 'sysServices',
-            'ports'        => 'ifNumber',
-            'ipforwarding' => 'ipForwarding',
-            );
+    id           => 'sysObjectID',
+    description  => 'sysDescr',
+    uptime       => 'sysUpTime',
+    contact      => 'sysContact',
+    name         => 'sysName',
+    location     => 'sysLocation',
+    layers       => 'sysServices',
+    ports        => 'ifNumber',
+    ipforwarding => 'ipForwarding',
+);
 
 my %FUNCS = (
-          'i_name' => 'ifName',
-            );
+    i_name => 'ifName',
+);
 
 for my $attr (keys %GLOBALS) {
     has $attr => (
@@ -112,7 +112,7 @@ sub _build_func {
     } else {
         my $val;
         for ($val = $sess->getnext($vars);
-            $vars->[0]->tag =~ /$func/       # still in table
+            $vars->[0]->tag =~ /$func/          # still in table
             and not $sess->{ErrorStr};          # and not end of mib or other error
             $val = $sess->getnext($vars)) {
                 my ($name, $iid) = split /\./, $vars->[0]->name;
