@@ -2,6 +2,8 @@ package SNMP::InfoX;
 use Moose;
 use SNMP;
 
+our $VERSION = '0.0001';
+
 with 'MooseX::Getopt';
 
 has snmp_ver => (
