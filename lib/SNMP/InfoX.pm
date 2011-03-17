@@ -72,7 +72,7 @@ for my $attr (keys %FUNCS) {
         is => 'ro',
         isa => 'HashRef[Str|Int]',
         lazy => 1,
-        default => sub { shift-> _build_func($FUNCS{$attr}) }
+        default => sub { shift->_build_func($FUNCS{$attr}) }
     );
 
     around $attr => sub {
